@@ -9,6 +9,9 @@ import lombok.Setter;
 @AllArgsConstructor
 public class InfoFornecedorDTO {
 
+	private Long id;
+	private String nome;
+	private String estado;
 	private String endereco;
 	
 }
