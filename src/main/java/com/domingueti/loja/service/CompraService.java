@@ -1,5 +1,7 @@
 package com.domingueti.loja.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.stereotype.Service;
@@ -13,17 +15,22 @@ import com.domingueti.loja.model.Compra;
 @Service
 @EnableFeignClients
 public class CompraService{
+	
+	private static final Logger LOG = LoggerFactory.getLogger(CompraService.class);
 
 	@Autowired
 	private FornecedorClient fornecedorClient;
 
 	public Compra realizaCompra(CompraDTO compra) {
+		
+		final String estado = compra.getEndereco().getEstado();
+		
+		LOG.info("Buscando informações do fornecedor de " + estado);
+		
 		InfoFornecedorDTO info = fornecedorClient.getInfoPorEstado(compra.getEndereco().getEstado());
-		//info == null
-		//compra.getEndereco.getEstado nao esta nulo, assim como compra.getList
-		System.out.println(info);
-
-		InfoPedidoDTO pedido = fornecedorClient.realizaPedido(compra.getList()); //erro esta aqui
+		
+		LOG.info("Realizando um pedido.");
+		InfoPedidoDTO pedido = fornecedorClient.realizaPedido(compra.getList());
 		//pedido retorna erro
 		
 		Compra compraSalva = new Compra();
